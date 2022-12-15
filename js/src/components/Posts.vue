@@ -40,18 +40,18 @@
                     </span>
                 </div>
             </div>
-            <div :key="comment.content" v-for="comment in comments">
-                <div v-if="(comments.length > 0 && comment.post_id == post.id)" >
+            <div :key="comment.content" v-for="comment in post.comments">
+                <div v-if="(post.comments.length > 0 )" >
                     <span class="flex justify-between bg-gray-200">
-                        <p class="text-xs lg:text-sm px-2 rounded-full mt-0.5 mb-1">{{comment.content}}</p>
-                        <svg @click="$emit('deletedComment',comment.id)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red"
+                        <p class="text-xs lg:text-sm px-2 rounded-full mt-0.5 mb-1">{{comment['content']}}</p>
+                        <svg @click="$emit('deletedComment', post.id, comment['id'])" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red"
                         class="w-6 h-6 cursor-pointer pr-2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
                     </svg>
                     </span>
                 </div>
-            </div>
+            </div> 
         </div>
         <div v-if="newPostSection">
             <form @submit.prevent="post">
@@ -99,7 +99,6 @@ export default {
     },
     props: {
         posts: Array,
-        comments: Array,
         newPostSection: Boolean,
         newCommentSection: Boolean,
         changePostSection: Boolean,
@@ -110,6 +109,7 @@ export default {
                 title: this.title,
                 content: this.content,
                 status: false,
+                comments :[],
             };
             this.title = '' 
             this.content = ''

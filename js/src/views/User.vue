@@ -10,7 +10,7 @@
             </span> 
         </header>
         <div class="flex justify-center">
-            <Posts class="block" :posts="this.posts" :comments="this.comments" @newPost="newPost" @close="close" @addComment="addComment" @liked="like" @id="newComment" @deletedPost="deletedPost" @deletedComment ='deletedComment' :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection"   :changePostSection="this.changePostSection" @changePost="changePost" @changedPost="changedPost" />
+            <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @addComment="addComment" @liked="like" @id="newComment" @deletedPost="deletedPost" @deletedComment ='deletedComment' :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection"   :changePostSection="this.changePostSection" @changePost="changePost" @changedPost="changedPost" />
         </div>
     </div>
 </template>
@@ -24,7 +24,6 @@ export default {
     data() {
         return {
             posts: [],
-            comments:[],
             newPostSection: false,
             newCommentSection: false,
             changePostSection :false,
@@ -47,7 +46,7 @@ export default {
         async fetchPosts() {
             const res = await fetch('http://127.0.0.1:5000/posts')
             const data = await res.json()
-            return data['posts']
+            return data
         },
         async deletedPost(id) {
             await fetch(`http://127.0.0.1:5000/posts/delete/${id}`, {
@@ -56,13 +55,13 @@ export default {
             })
             this.posts = await this.fetchPosts()
         },
-        async like(id) {
-            await fetch(`http://127.0.0.1:5000/posts/editlike/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-type': 'application/json' },
-            })
-            this.posts = await this.fetchPosts()
-        },
+         async like(id) {
+             await fetch(`http://127.0.0.1:5000/posts/editlike/${id}`, {
+                 method: 'PUT',
+                 headers: { 'Content-type': 'application/json' },
+             })
+             this.posts = await this.fetchPosts()
+         },
         async changedPost(changedPost) {
             const nPost = {
                 id: this.id,
@@ -75,11 +74,7 @@ export default {
                 body: JSON.stringify(nPost)
             })
             this.posts = await this.fetchPosts()
-        },
-        async fetchComments() {
-            const res = await fetch('http://127.0.0.1:5000/comments') 
-            const data = await res.json()
-            return data['comments']
+            this.changePostSection = !this.changePostSection
         },
         async addComment(myComment) {
             const nComment = {
@@ -87,22 +82,26 @@ export default {
                 content: myComment
             }
             if (myComment.length != 0) {
-                await fetch('http://127.0.0.1:5000/comments/newcomment', {
-                    method: 'POST',
+                await fetch('http://127.0.0.1:5000/posts/newcomment', {
+                    method: 'PUT',
                     headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify(nComment)
                 })
-            }
-            this.comments = await this.fetchComments()
-            this.newCommentSection = !this.newCommentSection
+             }
+             this.posts = await this.fetchPosts()
+             this.newCommentSection = !this.newCommentSection
         },
-        async deletedComment(id) {
-            await fetch(`http://127.0.0.1:5000/comments/delete/${id}`, {
-                method: 'DELETE',
+        async deletedComment(post_id, comment_id) {
+            const deletedComment = {
+                'post_id': post_id,
+                'comment_id': comment_id
+            }
+            await fetch('http://127.0.0.1:5000/posts/deleteComment', {
+                method: 'PUT',
                 headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(deletedComment)
             })
-            this.comments = await this.fetchComments()
-
+            this.posts = await this.fetchPosts()
         },
         show() {
             this.newPostSection = !this.newPostSection
@@ -123,8 +122,7 @@ export default {
         },
     },
     async created() {
-        this.posts = await this.fetchPosts()
-        this.comments = await this.fetchComments()
-    }
+         this.posts = await this.fetchPosts()
+     }
 }
 </script>
