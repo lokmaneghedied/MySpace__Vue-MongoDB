@@ -11,7 +11,7 @@ cors = CORS(app, resources={r"/foo": {"origins": "*"}})
 
 
 @app.route('/posts', methods=['GET'])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def get_posts():
     all_posts = []
     for post in mongo.db.posts.find():
@@ -34,7 +34,7 @@ def get_posts():
 
 
 @app.route('/posts/newPost', methods=['GET', 'POST'])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def new_post():
     post_title = request.get_json(force=True)['title']
     post_content = request.get_json(force=True)['content']
@@ -46,7 +46,7 @@ def new_post():
 
 
 @app.route('/posts/editlike/<string:id>', methods=['GET', 'PUT'])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def like(id):
     post = mongo.db.posts.find_one({"_id": ObjectId(id)})
     mongo.db.posts.update_one({"_id": ObjectId(id)}, {
@@ -55,14 +55,14 @@ def like(id):
 
 
 @app.route('/posts/delete/<string:id>', methods=["DELETE"])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def delete_post(id):
     mongo.db.posts.delete_one({"_id": ObjectId(id)})
     return 'h'
 
 
 @app.route('/posts/editPost', methods=['GET', 'PUT'])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def edit_post():
     post_id = request.get_json(force=True)['id']
     post_title = request.get_json(force=True)['title']
@@ -73,7 +73,7 @@ def edit_post():
 
 
 @app.route('/posts/newcomment', methods=['GET', 'PUT'])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def new_comment():
     post_id = request.get_json(force=True)['post_id']
     n_comment = request.get_json(force=True)['content']
@@ -87,7 +87,7 @@ def new_comment():
 
 
 @app.route('/posts/deleteComment', methods=['GET', 'PUT'])
-@cross_origin(origin='localhost', headers=["content-type", "Authrization", "Access-Control-Allow-Origin"])
+@cross_origin(origin='localhost', headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
 def delete_comment():
     post_id = request.get_json(force=True)['post_id']
     comment_id = request.get_json(force=True)['comment_id']
