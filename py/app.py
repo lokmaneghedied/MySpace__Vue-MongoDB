@@ -83,7 +83,7 @@ def new_comment():
     }
     mongo.db.posts.update_one({"_id": ObjectId(post_id)}, {
                               "$push": {"comments": comment_object}})
-    return 'h'
+    return "h"
 
 
 @app.route('/posts/deleteComment', methods=['GET', 'PUT'])
